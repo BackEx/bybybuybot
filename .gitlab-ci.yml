@@ -1,0 +1,14 @@
+before_script:
+    - git submodule update --init
+    - export RSYNC_PASSWORD=egZQkhsmSAYqK1SE
+job:
+  only:
+    - master
+  script:
+    - build_number=$(cat /tmp/number$CI_PROJECT_ID 2>/dev/null || echo 1)
+    - build_number=$(($build_number + 1))
+    - echo $build_number > /tmp/number$CI_PROJECT_ID;
+    - rm -rf /root/rpmbuild/RPMS/x86_64/bankex*
+    - ./rpmtools/tornado/build.sh --virtualenv /usr/bin/virtualenv-2.7 --build=$build_number
+    - cd /root/rpmbuild/RPMS/x86_64
+    - rsync bankex* rsync://jenkins@pkg.team.ktsstudio.ru/private_projects_c6
