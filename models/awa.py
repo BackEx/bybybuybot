@@ -1,5 +1,5 @@
 import mongoengine
-from mongoengine import StringField, IntField, DateTimeField, ReferenceField
+from mongoengine import StringField, IntField, DateTimeField, ReferenceField, ListField
 from tornkts.base.mongodb.user import User as BaseUser
 from tornkts.base.mongodb import BaseDocument
 from tornkts.base.mongodb.user import BaseAdmin
@@ -46,6 +46,49 @@ class Salesman(BaseDocument):
             self.creation_date = datetime.now(tz=timezone('UTC'))
         self.update_date = datetime.now(tz=timezone('UTC'))
         return super(Salesman, self).save(*args, **kwargs)
+
+
+class Offer(BaseDocument):
+    TYPE_ONLINE_VIDEO = 'online_video'
+    TYPE_ONLINE_AUDIO = 'online_audio'
+    TYPE_ONLINE_CHAT = 'online_chat'
+    TYPE_OFFLINE = 'offline'
+
+    OFFER_TYPES = [TYPE_ONLINE_VIDEO, TYPE_ONLINE_AUDIO, TYPE_ONLINE_CHAT, TYPE_OFFLINE]
+
+    salesman = ReferenceField(Salesman, reverse_delete_rule=mongoengine.NULLIFY, required=False)
+
+    title = StringField(required=True)
+    price = IntField(required=True)
+    description = StringField()
+    photo_url = StringField()
+    location = StringField()
+    offer_type = StringField(choices=OFFER_TYPES)
+    tags = ListField(StringField())
+
+    creation_date = DateTimeField()
+    update_date = DateTimeField()
+
+    def save(self, *args, **kwargs):
+        if not self.creation_date:
+            self.creation_date = datetime.now(tz=timezone('UTC'))
+        self.update_date = datetime.now(tz=timezone('UTC'))
+        return super(Offer, self).save(*args, **kwargs)
+
+    def to_dict_impl(self, **kwargs):
+        return {
+            'id': self.get_id(),
+            'title': self.title,
+            'price': self.price,
+            'description': self.description,
+            'photo_url': self.photo_url,
+            'location': self.location,
+            'offer_type': self.offer_type,
+            'tags': ", ".join(self.tags),
+            'creation_date': self.creation_date,
+            'salesman_telegram_id': self.salesman.telegram_id if self.salesman else None,
+            'salesman_id': self.salesman.get_id() if self.salesman else None,
+        }
 
 
 class User(BaseUser):

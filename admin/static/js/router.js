@@ -3,20 +3,17 @@ define([
     'config', 'backbonekts', 'backbone', 'jquery', 'underscore',
     'models/admin',
     'views/login',
-    'views/main',
-    'views/toolbar',
-    'views/admins',
-    'views/texts',
-    'views/users',
-    'views/salesmen'
+    'views/main', 'views/toolbar', 'views/admins', 'views/texts', 'views/users', 'views/salesmen', 'views/offers'
 ], function (Config, BackboneKTS, Backbone, $, _, Admin,
-             LoginView, MainView, ToolbarView, AdminsView, TextsView, UsersView, SalesmenView) {
+             LoginView, MainView, ToolbarView, AdminsView, TextsView, UsersView, SalesmenView, OffersView) {
     return BackboneKTS.Router.extend({
         routes: {
             "salesmen/(:action)/(:id)": "salesmenPage",
             "salesmen/(:action)": "salesmenPage",
             "salesmen": "salesmenPage",
 
+            "offers/(:action)/(:id)": "offersPage",
+            "offers/(:action)": "offersPage",
             "offers": "offersPage",
 
             // service
@@ -41,7 +38,8 @@ define([
             'admins': AdminsView,
             'texts': TextsView,
             'users': UsersView,
-            'salesmen': SalesmenView
+            'salesmen': SalesmenView,
+            'offers': OffersView
         },
         initialize: function () {
             window.config = Config;
@@ -117,7 +115,10 @@ define([
             this._getViewByName('login').render(action);
         },
         offersPage: function (action, id) {
-
+            if (config.user === false) {
+                return false;
+            }
+            this._getViewByName('offers').render(action, id);
         },
         salesmenPage: function (action, id) {
             if (config.user === false) {

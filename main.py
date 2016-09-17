@@ -1,6 +1,7 @@
 from tornkts.base.server_response import ServerError, ServerResponseStatus
 
 from handlers.admin_handler import AdminHandler
+from handlers.offers_handler import OffersHandler
 from handlers.texts_handler import TextsHandler
 from handlers.salesman_handler import SalesmanHandler
 from os import path
@@ -24,6 +25,7 @@ if __name__ == "__main__":
         (r'/api/texts.(.*)', TextsHandler),
         (r'/api/users.(.*)', UsersHandler),
         (r'/api/salesman.(.*)', SalesmanHandler),
+        (r'/api/offers.(.*)', OffersHandler),
 
         (r'/static/(.*)', StaticFileHandler, dict(path=path.join(options.static_root, 'static'))),
         (r'/(.*)', IndexHandler),
