@@ -37,9 +37,9 @@ class SalesmanHandler(AuthMixin, BankExObjectHandler):
         super(SalesmanHandler, self).put_object(updated_object)
 
     def register(self):
-        telegram_id = self.get_argument('telegram_id')
-        telegram_nick = self.get_argument('telegram_nick', default=None)
-        about = self.get_argument('about', default=None)
+        telegram_id = self.get_str_argument('telegram_id')
+        telegram_nick = self.get_str_argument('telegram_nick', default=None)
+        about = self.get_str_argument('about', default=None)
 
         try:
             Salesman.objects.get(telegram_id=telegram_id)
