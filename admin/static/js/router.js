@@ -7,12 +7,16 @@ define([
     'views/toolbar',
     'views/admins',
     'views/texts',
-    'views/users'
+    'views/users',
+    'views/salesmen'
 ], function (Config, BackboneKTS, Backbone, $, _, Admin,
-             LoginView, MainView, ToolbarView, AdminsView, TextsView, UsersView) {
+             LoginView, MainView, ToolbarView, AdminsView, TextsView, UsersView, SalesmenView) {
     return BackboneKTS.Router.extend({
         routes: {
-            "salesman": "salesmanPage",
+            "salesmen/(:action)/(:id)": "salesmenPage",
+            "salesmen/(:action)": "salesmenPage",
+            "salesmen": "salesmenPage",
+
             "offers": "offersPage",
 
             // service
@@ -36,7 +40,8 @@ define([
             'toolbar': ToolbarView,
             'admins': AdminsView,
             'texts': TextsView,
-            'users': UsersView
+            'users': UsersView,
+            'salesmen': SalesmenView
         },
         initialize: function () {
             window.config = Config;
@@ -106,7 +111,7 @@ define([
             if (config.user === false) {
                 return false;
             }
-            this.redirect('salesman');
+            this.redirect('salesmen');
         },
         loginPage: function (action) {
             this._getViewByName('login').render(action);
@@ -114,11 +119,11 @@ define([
         offersPage: function (action, id) {
 
         },
-        salesmanPage: function (action, id) {
+        salesmenPage: function (action, id) {
             if (config.user === false) {
                 return false;
             }
-            this._getViewByName('users').render(action, id);
+            this._getViewByName('salesmen').render(action, id);
         },
         usersPage: function (action, id) {
             if (config.user === false) {

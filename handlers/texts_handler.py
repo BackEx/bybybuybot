@@ -1,4 +1,4 @@
-from models.awa import Admin, Exchange
+from models.awa import Admin
 from tornkts.auth import need_role
 from tornkts.mixins.auth_mixin import AuthMixin
 from tornkts.handlers.object_handler import ObjectHandler

@@ -1,9 +1,11 @@
 from tornkts.base.server_response import ServerError
-from tornkts.handlers import BaseHandler
-from os import path
-from settings import options
 
-class IndexHandler(BaseHandler):
+from base.base_handler import BankExBaseHandler
+from settings import options
+from os import path
+
+
+class IndexHandler(BankExBaseHandler):
     @property
     def get_methods(self):
         return {
