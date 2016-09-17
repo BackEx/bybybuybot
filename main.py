@@ -26,6 +26,7 @@ if __name__ == "__main__":
         (r'/api/exchanges.(.*)', ExchangesHandler),
         (r'/api/texts.(.*)', TextsHandler),
         (r'/api/users.(.*)', UsersHandler),
+        (r'/api/salesman.(.*)', SalesmanHandler),
 
         (r'/static/(.*)', StaticFileHandler, dict(path=path.join(options.static_root, 'static'))),
         (r'/(.*)', IndexHandler),

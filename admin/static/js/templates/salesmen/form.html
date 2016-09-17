@@ -1,0 +1,43 @@
+<div class="container">
+    <div class="row">
+        <h2><% if (item.get('id')) { %>
+            Редактирование продавца
+            <% } else { %>
+            Добавление продавца
+            <% } %>
+        </h2>
+        <form class="js-corp-form form-horizontal" role="form">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Telegram ID</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="telegram_id" value="<%- item.get('telegram_id') %>" readonly/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Ник</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="telegram_nick" value="<%- item.get('telegram_nick') %>"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Описание</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="about" value="<%- item.get('about') %>"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+            <% if (item.get('id')) { %>
+            <input type="hidden" name="id" value="<%- item.get('id') %>"/>
+            <% } %>
+            <div class="form-group">
+                <div class="col-md-9">
+                    <button id="btn-signup" type="submit" class="btn btn-success">Сохранить</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
