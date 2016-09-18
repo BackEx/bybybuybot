@@ -78,6 +78,9 @@ class OffersHandler(AuthMixin, TemplateMixin, BankExObjectHandler):
         )
         offer.save()
 
+        self.send_success_response(data={'id': offer.get_id()})
+        self.finish()
+
         url = 'http://3007.vkontraste.ru/?url=http://{0}/api/offers.html?id={1}'.format(options.server_name, offer.get_id())
         client = AsyncHTTPClient()
         req = HTTPRequest(url)
@@ -91,7 +94,6 @@ class OffersHandler(AuthMixin, TemplateMixin, BankExObjectHandler):
         offer.rendered_img = path.get('relname')
         offer.save()
 
-        self.send_success_response(data={'id': offer.get_id()})
 
     def html(self):
         try:
