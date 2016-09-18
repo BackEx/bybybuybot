@@ -9,7 +9,6 @@ require.config({
         notific: '../bower_components/notific/dist/notific',
         moment: '../bower_components/moment/moment',
         autocomplete: '../bower_components/devbridge-autocomplete/dist/jquery.autocomplete',
-        'x-editable': '../bower_components/x-editable/dist/bootstrap3-editable/js/bootstrap-editable',
 
         config: './config',
         router: './router',
@@ -23,8 +22,7 @@ require.config({
     },
     urlArgs: "nonce=" + (new Date()).getTime(),
     shim: {
-        bootstrap: ['jquery'],
-        'x-editable': ['jquery', 'bootstrap']
+        bootstrap: ['jquery']
     },
     config: {
         text: {

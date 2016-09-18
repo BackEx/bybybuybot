@@ -23,7 +23,6 @@
     "moment": "~2.13.0",
     "bootstrap": "~3.3.6",
     "devbridge-autocomplete": "^1.2.25",
-    "x-editable": "^1.5.1",
     "font-awesome": "^3.2.1"
   }
 }
