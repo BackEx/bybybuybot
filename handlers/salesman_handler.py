@@ -63,9 +63,19 @@ class SalesmanHandler(AuthMixin, BankExObjectHandler):
         telegram_nick = self.get_str_argument('telegram_nick', default=None)
         about = self.get_str_argument('about', default=None)
 
+        updated_nick = False
+        updated_about = False
+
         if telegram_nick:
             salesman.telegram_nick = telegram_nick
+            updated_nick = True
         if about:
             salesman.about = about
+            updated_about = True
 
         salesman.save()
+
+        self.send_success_response(data={
+            'updated_about': updated_about,
+            'updated_nick': updated_nick
+        })
