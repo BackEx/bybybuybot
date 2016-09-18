@@ -1,5 +1,5 @@
 # coding=utf-8
-from models.awa import Admin
+from models.bankex import Admin
 from tornkts.utils import PasswordHelper
 from settings import options
 from mongoengine import connection as mongo_connection

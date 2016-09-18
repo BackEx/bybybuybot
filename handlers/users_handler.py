@@ -1,11 +1,17 @@
+from mongoengine import StringField, ListField, IntField
+
 from base.base_handler import BankExObjectHandler
-from models.awa import Admin, User
+from models.bankex import Admin, User
 from tornkts.auth import need_role
 from tornkts.mixins.auth_mixin import AuthMixin
 
 
 class UsersHandler(AuthMixin, BankExObjectHandler):
     MODEL_CLS = User
+
+    location = StringField()
+    tags = ListField(StringField())
+    price = IntField()
 
     @property
     def queryset(self):

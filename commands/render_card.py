@@ -1,5 +1,5 @@
 from tornado.httpclient import HTTPRequest, HTTPClient
-from models.awa import Offer
+from models.bankex import Offer
 from settings import options
 import sys
 

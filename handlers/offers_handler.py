@@ -5,7 +5,7 @@ from tornkts.mixins.auth_mixin import AuthMixin
 
 from base.base_handler import BankExObjectHandler, TemplateMixin
 from base.base_server_error import BankExServerError
-from models.awa import Salesman, Admin, Offer
+from models.bankex import Salesman, Admin, Offer
 from settings import options
 from utils import gen_path, mkdir
 
@@ -62,24 +62,15 @@ class OffersHandler(AuthMixin, TemplateMixin, BankExObjectHandler):
             salesman = Salesman(telegram_id=telegram_id, telegram_nick=telegram_nick, about=about)
             salesman.save()
 
-        photo_url = self.get_str_argument('photo_url')
-        title = self.get_str_argument('title')
-        description = self.get_str_argument('description')
-        price = self.get_int_argument('price')
-        tags = self.get_str_array_argument('tags')
-        offer_type = self.get_str_argument('offer_type', allowed_values=Offer.OFFER_TYPES)
-        location = self.get_str_argument('location')
-
-        offer = Offer(
-            salesman=salesman,
-            title=title,
-            price=price,
-            description=description,
-            photo_url=photo_url,
-            location=location,
-            offer_type=offer_type,
-            tags=tags
-        )
+        offer = Offer()
+        offer.salesman = salesman
+        offer.title = self.get_str_argument('title')
+        offer.price = self.get_int_argument('price')
+        offer.description = self.get_str_argument('description')
+        offer.photo_url = self.get_str_argument('photo_url')
+        offer.location = self.get_str_argument('location')
+        offer.offer_type = self.get_str_argument('offer_type', allowed_values=Offer.OFFER_TYPES)
+        offer.tags = self.get_str_array_argument('tags')
         offer.save()
 
         self.send_success_response(data={'id': offer.get_id()})

@@ -1,5 +1,5 @@
 from base.base_handler import BankExObjectHandler
-from models.awa import Admin
+from models.bankex import Admin
 from tornkts.auth import need_role
 from tornkts.mixins.auth_mixin import AuthMixin
 from models.content import Text

@@ -1,7 +1,5 @@
 # coding=utf-8
-from pytz import timezone
-
-from models.awa import User
+from models.bankex import User
 from models.content import Text
 from roboman.bot import BaseBot
 import logging

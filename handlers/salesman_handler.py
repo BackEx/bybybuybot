@@ -3,7 +3,7 @@ from tornkts.mixins.auth_mixin import AuthMixin
 
 from base.base_handler import BankExObjectHandler
 from base.base_server_error import BankExServerError
-from models.awa import Salesman, Admin
+from models.bankex import Salesman, Admin
 
 
 class SalesmanHandler(AuthMixin, BankExObjectHandler):
