@@ -1,0 +1,118 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans"/>
+        <style type="text/css">
+            div:empty {
+                display: none;
+                padding: 0 !important;
+            }
+
+            table {
+                padding: 0;
+                margin: 0;
+                border-collapse: collapse;
+            }
+
+            div.smarttag {
+                border-radius: 8px;
+                background: #c7cacc;
+                padding: 5px;
+                display: inline;
+                color: #778189;
+            }
+        </style>
+
+        <script type="text/javascript">
+
+            function changeImage() {
+                var offerTypeDiv = document.getElementById('offer_type');
+                var offerType = offerTypeDiv.innerHTML;
+                var imgSrc = "";
+                switch (offerType) {
+                    case "Online Video":
+                        imgSrc = "https://s3.eu-central-1.amazonaws.com/testing-killjoy/bankExBot/video.png";
+                        break;
+                    case "Offline":
+                        imgSrc = "https://s3.eu-central-1.amazonaws.com/testing-killjoy/bankExBot/offline.png";
+                        break;
+                    case "Online Chat":
+                        imgSrc = "https://s3.eu-central-1.amazonaws.com/testing-killjoy/bankExBot/chat.png";
+                        break;
+                    case "Online Audio":
+                        imgSrc = "https://s3.eu-central-1.amazonaws.com/testing-killjoy/bankExBot/audio.png";
+                        break;
+                    default:
+                        break;
+                }
+                image = document.getElementById("offerTypeImage");
+                image.src = imgSrc;
+            }
+        </script>
+    </head>
+    <body onload="changeImage()">
+        <div class="frame" style="width:400px;height:645px;border: 0 solid lightgrey;padding: 10px;font-family: Open Sans,sans-serif;color:#46555f;">
+            <div style="width:400px;max-height:400px;overflow:hidden">
+                <img id="photo_url" src="{{ offer.photo_url }}" style="max-width:400px"/>
+            </div>
+
+            <div class="title" style="margin-top:-12px;">
+                <h1 style="font-size:24px;" id="offerTitle">{{ offer.title }}</h1>
+            </div>
+
+            <div class="offerDescription" id="description" style="margin-top:-16px;color:#666;">
+                <p>
+                    {{ nl2br(offer.description) }}
+                </p>
+            </div>
+
+            <div style="background: #eeeeee;margin: -10px -10px 0;padding: 10px 10px 10px;">
+                <!-- Location -->
+                <table style="font-size:28px;width:100%;border-collapse: collapse;padding:0;border: 0;">
+
+                    <tr>
+                        <td style="width:38px">
+                            <img src="https://s3.eu-central-1.amazonaws.com/testing-killjoy/bankExBot/location.png"/>
+                        </td>
+                        <td>
+                            <div style="overflow:hidden;" id="location">{{ offer.location }}</div>
+                        </td>
+                        <!-- Rating -->
+                        <td>
+                            <div align="right" style="white-space:nowrap">
+                                <img src="https://s3.eu-central-1.amazonaws.com/testing-killjoy/bankExBot/thumbUp.png" style="display:inline;padding-right:5px"/>
+                                <div style="display:inline;color:#47B549;margin-right:10px;" id="offerRating">98,5%
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <img src="https://s3.eu-central-1.amazonaws.com/testing-killjoy/bankExBot/video.png" id="offerTypeImage" style="vertical-align: middle;"/>
+                        </td>
+                        <td id="offer_type">Offline</td>
+                    </tr>
+
+                </table>
+                <!-- Smart tags-->
+                <div class="smarttag" id="tag1"></div>
+                <div class="smarttag" id="tag2"></div>
+                <div class="smarttag" id="tag3"></div>
+            </div>
+            <div style="background:#ff6700;width:420px;height:74px;margin:0 -10px;color:white;font-family:Myriad Pro,sans-serif;font-size:60px">
+                <div style="margin-left:10px;">
+                    <table style="padding:0; margin:0;">
+                        <tr>
+                            <td id="price" style="color: white;font-size: 60px;">{{ offer.price }}$
+                            <td>
+                            <td>
+                                <img src="https://s3.eu-central-1.amazonaws.com/testing-killjoy/bankExBot/buy.png"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </body>
+</html>

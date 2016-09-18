@@ -1,10 +1,10 @@
+from base.base_handler import BankExObjectHandler
 from models.awa import Admin, User
 from tornkts.auth import need_role
 from tornkts.mixins.auth_mixin import AuthMixin
-from tornkts.handlers.object_handler import ObjectHandler
 
 
-class UsersHandler(AuthMixin, ObjectHandler):
+class UsersHandler(AuthMixin, BankExObjectHandler):
     MODEL_CLS = User
 
     @property

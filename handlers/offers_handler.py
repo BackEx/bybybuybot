@@ -1,13 +1,21 @@
 from tornkts.auth import need_role
 from tornkts.mixins.auth_mixin import AuthMixin
 
-from base.base_handler import BankExObjectHandler
+from base.base_handler import BankExObjectHandler, TemplateMixin
 from base.base_server_error import BankExServerError
 from models.awa import Salesman, Admin, Offer
 
 
-class OffersHandler(AuthMixin, BankExObjectHandler):
+class OffersHandler(AuthMixin, TemplateMixin, BankExObjectHandler):
     MODEL_CLS = Offer
+
+    @property
+    def get_methods(self):
+        methods = {
+            'html': self.html
+        }
+        methods.update(super(OffersHandler, self).get_methods)
+        return methods
 
     @property
     def post_methods(self):
@@ -43,7 +51,7 @@ class OffersHandler(AuthMixin, BankExObjectHandler):
         try:
             salesman = Salesman.objects.get(telegram_id=telegram_id)
         except Salesman.DoesNotExist:
-            raise BankExServerError(BankExServerError.NOT_FOUND,field='salesman')
+            raise BankExServerError(BankExServerError.NOT_FOUND, field='salesman')
 
         photo_url = self.get_str_argument('photo_url')
         title = self.get_str_argument('title')
@@ -66,3 +74,11 @@ class OffersHandler(AuthMixin, BankExObjectHandler):
         offer.save()
 
         self.send_success_response(data={'id': offer.get_id()})
+
+    def html(self):
+        try:
+            offer = Offer.objects.get(id=self.get_mongo_id_argument('id'))
+        except Offer.DoesNotExist:
+            raise BankExServerError(BankExServerError.NOT_FOUND)
+
+        self.render('offer.html', {'offer': offer})

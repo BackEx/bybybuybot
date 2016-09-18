@@ -1,12 +1,11 @@
+from base.base_handler import BankExObjectHandler
 from models.awa import Admin
 from tornkts.auth import need_role
 from tornkts.mixins.auth_mixin import AuthMixin
-from tornkts.handlers.object_handler import ObjectHandler
-
 from models.content import Text
 
 
-class TextsHandler(AuthMixin, ObjectHandler):
+class TextsHandler(AuthMixin, BankExObjectHandler):
     MODEL_CLS = Text
 
     @property
