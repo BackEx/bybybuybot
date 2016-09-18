@@ -38,7 +38,7 @@ class SalesmanHandler(AuthMixin, BankExObjectHandler):
 
     def register(self):
         telegram_id = self.get_str_argument('telegram_id')
-        telegram_nick = self.get_str_argument('telegram_nick', default=None)
+        telegram_nick = self.get_str_argument('telegram_nick')
         about = self.get_str_argument('about', default=None)
 
         try:

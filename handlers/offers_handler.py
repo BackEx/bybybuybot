@@ -56,7 +56,11 @@ class OffersHandler(AuthMixin, TemplateMixin, BankExObjectHandler):
         try:
             salesman = Salesman.objects.get(telegram_id=telegram_id)
         except Salesman.DoesNotExist:
-            raise BankExServerError(BankExServerError.NOT_FOUND, field='salesman')
+            telegram_nick = self.get_str_argument('telegram_nick')
+            about = self.get_str_argument('about', default=None)
+            
+            salesman = Salesman(telegram_id=telegram_id, telegram_nick=telegram_nick, about=about)
+            salesman.save()
 
         photo_url = self.get_str_argument('photo_url')
         title = self.get_str_argument('title')
@@ -81,7 +85,8 @@ class OffersHandler(AuthMixin, TemplateMixin, BankExObjectHandler):
         self.send_success_response(data={'id': offer.get_id()})
         self.finish()
 
-        url = 'http://3007.vkontraste.ru/?url=http://{0}/api/offers.html?id={1}'.format(options.server_name, offer.get_id())
+        url = 'http://3007.vkontraste.ru/?url=http://{0}/api/offers.html?id={1}'.format(options.server_name,
+                                                                                        offer.get_id())
         client = AsyncHTTPClient()
         req = HTTPRequest(url)
         res = yield client.fetch(req)
@@ -93,7 +98,6 @@ class OffersHandler(AuthMixin, TemplateMixin, BankExObjectHandler):
 
         offer.rendered_img = path.get('relname')
         offer.save()
-
 
     def html(self):
         try:
