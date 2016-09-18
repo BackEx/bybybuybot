@@ -116,6 +116,34 @@ class Offer(BaseDocument):
             'salesman_id': self.salesman.get_id() if self.salesman else None,
         }
 
+class Deal(BaseDocument):
+    STEP_NEW = 0
+    STEP_BLOCKCHAIN = 1
+    STEP_QIWI = 2
+    STEP_WAIT_SALEMAN = 3
+
+    offer = ReferenceField('Offer', reverse_delete_rule=mongoengine.NULLIFY, required=True)
+    user = ReferenceField('User', reverse_delete_rule=mongoengine.NULLIFY, required=True)
+    step = IntField(default=STEP_NEW)
+
+    creation_date = DateTimeField()
+    update_date = DateTimeField()
+
+    def save(self, *args, **kwargs):
+        if not self.creation_date:
+            self.creation_date = datetime.now(tz=timezone('UTC'))
+        self.update_date = datetime.now(tz=timezone('UTC'))
+        return super(Deal, self).save(*args, **kwargs)
+
+    def to_dict_impl(self, **kwargs):
+        return {
+            'id': self.get_id(),
+            'user': self.user.username,
+            'offer': self.offer.title,
+            'salesman': self.offer.salesman.telegram_id,
+            'salesman_id': self.offer.salesman.get_id(),
+            'creation_date': self.creation_date
+        }
 
 class User(BaseUser):
     STEP_CHOOSING = 0
@@ -138,6 +166,8 @@ class User(BaseUser):
     creation_date = DateTimeField()
     update_date = DateTimeField()
 
+    current_deal = ReferenceField('Deal', reverse_delete_rule=mongoengine.NULLIFY, required=False, default=None)
+
     def save(self, *args, **kwargs):
         if not self.creation_date:
             self.creation_date = datetime.now(tz=timezone('UTC'))
@@ -154,3 +184,6 @@ class User(BaseUser):
             'username': self.username,
             'creation_date': self.creation_date
         }
+
+
+

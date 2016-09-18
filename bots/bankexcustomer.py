@@ -2,7 +2,7 @@
 import traceback
 
 from tornkts import utils
-from models.bankex import User, Offer
+from models.bankex import User, Offer, Deal
 from models.content import Text
 from roboman.bot import BaseBot
 from roboman.keyboard import ReplyKeyboard, ReplyKeyboardHide, InlineKeyboard, InlineKeyboardButton
@@ -52,7 +52,9 @@ class BankExCustomer(BaseBot):
 
         if cls.match_command('/start', text) or cls.match_command(Text.format('CL_MSG_NEW_SEARCH'), text):
             return cls._on_start(**data)
-        if not user.location:
+        elif cls.match_command('/hackend', text):
+            return cls._on_hachend(**data)
+        elif not user.location:
             return cls._on_enter_location(**data)
         elif len(user.tags) == 0:
             return cls._on_enter_tags(**data)
@@ -61,6 +63,19 @@ class BankExCustomer(BaseBot):
 
         if data.get('callback_query'):
             user.step = User.STEP_BLOCKCHAIN
+            user.save()
+
+            try:
+                offer = Offer.objects.get(id=data.get('callback_query'))
+            except Exception:
+                return
+
+            deal = Deal()
+            deal.user = user
+            deal.offer = offer
+            deal.save()
+
+            user.current_deal = deal
             user.save()
 
             keyboard = ReplyKeyboard(keyboard=[[
@@ -89,8 +104,6 @@ class BankExCustomer(BaseBot):
             cls._prev_item(**data)
         elif cls.match_command(Text.format('CL_MSG_NEW_SEARCH'), text):
             cls._on_start(**data)
-        elif cls.match_command('/hackend', text):
-            cls._on_hachend(**data)
 
     @classmethod
     def _on_start(cls, **kwargs):
@@ -112,7 +125,7 @@ class BankExCustomer(BaseBot):
     @classmethod
     def _on_hachend(cls, **kwargs):
         now = datetime.datetime.now()
-        end = datetime.datetime(2016, 9, 18, 12, 0)
+        end = datetime.datetime(2016, 9, 18, 14, 30)
         diff = (end - now)
         cls.send(
             chat_id=kwargs.get('chat_id'),
@@ -179,14 +192,19 @@ class BankExCustomer(BaseBot):
                 ]])
             )
         elif cls.match_command(Text.format('CL_NO_FEAR'), text):
+            user.current_deal.delete()
+            user.current_deal = None
             user.step = User.STEP_CHOOSING
             user.save()
+
             cls.send(
                 chat_id=data.get('chat_id'),
                 text=Text.format('CL_FEAR_BLOCKCHAIN_WIKI'),
                 reply_markup=cls._get_main_keyboard().to_json()
             )
         elif cls.match_command(Text.format('CL_WHAT_IS_BLOCKCHAIN'), text):
+            user.current_deal.delete()
+            user.current_deal = None
             user.step = User.STEP_CHOOSING
             user.save()
             cls.send(
@@ -209,6 +227,8 @@ class BankExCustomer(BaseBot):
                 reply_markup=cls._get_main_keyboard().to_json()
             )
         elif cls.match_command(Text.format('CL_WANT_SPENT_MONEY'), text):
+            user.current_deal.delete()
+            user.current_deal = None
             user.step = User.STEP_CHOOSING
             user.save()
             cls.send(
@@ -217,6 +237,8 @@ class BankExCustomer(BaseBot):
                 reply_markup=cls._get_main_keyboard().to_json()
             )
         elif cls.match_command(Text.format('CL_WHAT_IS_QIWI'), text):
+            user.current_deal.delete()
+            user.current_deal = None
             user.step = User.STEP_CHOOSING
             user.save()
             cls.send(

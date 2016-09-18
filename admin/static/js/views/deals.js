@@ -1,90 +1,45 @@
 "use strict";
 define([
     'backbonekts', 'underscore', 'jquery',
-    'text!templates/offers/index.html',
-    'text!templates/offers/form.html',
-    'collections/offers', 'models/offer'
-], function (BackboneKTS, _, $, indexTemplate, formTemplate, OffersCollection, Offer) {
+    'text!templates/deals/index.html', 'collections/deals'
+], function (BackboneKTS, _, $, indexTemplate, DealsCollection) {
     return BackboneKTS.View.extend({
         indexTemplate: _.template(indexTemplate),
-        formTemplate: _.template(formTemplate),
         events: {
-            'click .pagination__item.pagination__item_offers': 'pagination',
-            'submit .js-corp-form': 'formSubmit',
-            'click .js-offer-remove': 'removeOffer'
+            'click .pagination__item.pagination__item_deals': 'pagination',
+            'click .js-deal-remove': 'removeDeal'
         },
         actionIndex: function (offset) {
             var self = this;
             if (offset === null) {
                 offset = 0;
             }
-            var salesmenCollection = new OffersCollection();
-            salesmenCollection.fetch({
+            var dealsCollection = new DealsCollection();
+            dealsCollection.fetch({
                 data: {
                     offset: offset
                 },
                 success: function () {
+
                     self.$el.html(self.indexTemplate({
                         offset: offset,
-                        count: salesmenCollection.totalCount,
-                        users: salesmenCollection
+                        count: dealsCollection.totalCount,
+                        users: dealsCollection
                     }));
                 }
             });
         },
-        actionEdit: function (id) {
-            this._actionPut(id);
-        },
-        _actionPut: function (id) {
-            var self = this;
-
-            function render(item) {
-                self.$el.html(self.formTemplate({
-                    item: item
-                }));
-            }
-
-            if (id !== undefined) {
-                var offer = new Offer({id: id});
-                offer.fetch({
-                    success: function () {
-                        render(offer);
-                    }
-                });
-            } else {
-                render(new Offer());
-            }
-        },
-        formSubmit: function (evt) {
-            var self = this,
-                data = self.serializeForm(evt.currentTarget);
-            evt.preventDefault();
-
-            var offer = new Offer();
-            offer.save(data, {
-                url: config.getMethodUrl('offers.save'),
-                success: function () {
-                    if (data.id) {
-                        self._showSuccess('Успех', 'Предложение успешно сохранено');
-                    }
-                    self.redirect('offers');
-                },
-                error: function (object, response) {
-                    self._showError(response);
-                }
-            });
-        },
-        removeOffer: function (e) {
+        removeDeal: function (e) {
             e.preventDefault();
             var id = $(e.currentTarget).attr('data-id');
             var self = this;
             if (confirm('Вы уверены?')) {
                 $.ajax({
                     method: 'post',
-                    url: config.getMethodUrl('salesman.delete', {id: id}),
+                    url: config.getMethodUrl('deals.delete', {id: id}),
                     success: function () {
                         self._showSuccess('Успех', 'Предложение удалено');
-                        $('.js-salesman-row[data-id="' + id + '"]').remove();
+                        $('.js-deal-row[data-id="' + id + '"]').remove();
                     }
                 });
             }

@@ -1,6 +1,7 @@
 from raven.contrib.tornado import AsyncSentryClient
 
 from handlers.admin_handler import AdminHandler
+from handlers.deals_handler import DealsHandler
 from handlers.offers_handler import OffersHandler
 from handlers.texts_handler import TextsHandler
 from handlers.salesman_handler import SalesmanHandler
@@ -26,6 +27,7 @@ if __name__ == "__main__":
         (r'/api/users.(.*)', UsersHandler),
         (r'/api/salesman.(.*)', SalesmanHandler),
         (r'/api/offers.(.*)', OffersHandler),
+        (r'/api/deals.(.*)', DealsHandler),
 
         (r'/static/(.*)', StaticFileHandler, dict(path=path.join(options.static_root, 'static'))),
         (r'/(.*)', IndexHandler),

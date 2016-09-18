@@ -136,7 +136,7 @@ define([
             if (config.user === false) {
                 return false;
             }
-            this._getViewByName('dealsPage').render(action, id);
+            this._getViewByName('deals').render(action, id);
         },
         usersPage: function (action, id) {
             if (config.user === false) {
