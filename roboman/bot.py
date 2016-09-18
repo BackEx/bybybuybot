@@ -101,4 +101,4 @@ class BaseBot(BaseHandler):
     @classmethod
     def get_webhook_url(cls):
         cls.access_key = ''.join([random.choice(string.ascii_letters + string.digits) for _ in xrange(30)])
-        return options.server_name + '/telegram.' + cls.access_key
+        return options.server_schema + '://' + options.server_name + '/telegram.' + cls.access_key

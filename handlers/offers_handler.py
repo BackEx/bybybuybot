@@ -1,9 +1,13 @@
+from tornado import gen
+from tornado.httpclient import AsyncHTTPClient, HTTPRequest
 from tornkts.auth import need_role
 from tornkts.mixins.auth_mixin import AuthMixin
 
 from base.base_handler import BankExObjectHandler, TemplateMixin
 from base.base_server_error import BankExServerError
 from models.awa import Salesman, Admin, Offer
+from settings import options
+from utils import gen_path, mkdir
 
 
 class OffersHandler(AuthMixin, TemplateMixin, BankExObjectHandler):
@@ -46,6 +50,7 @@ class OffersHandler(AuthMixin, TemplateMixin, BankExObjectHandler):
     def put_object(self, updated_object=None):
         super(OffersHandler, self).put_object(updated_object)
 
+    @gen.coroutine
     def publish(self):
         telegram_id = self.get_str_argument('telegram_id')
         try:
@@ -71,6 +76,19 @@ class OffersHandler(AuthMixin, TemplateMixin, BankExObjectHandler):
             offer_type=offer_type,
             tags=tags
         )
+        offer.save()
+
+        url = 'http://3007.vkontraste.ru/?url=http://{0}/api/offers.html?id={1}'.format(options.server_name, offer.get_id())
+        client = AsyncHTTPClient()
+        req = HTTPRequest(url)
+        res = yield client.fetch(req)
+
+        path = gen_path()
+        mkdir(path.get('folder'))
+        with open(path.get('fullname'), "w") as f:
+            f.write(res.body)
+
+        offer.rendered_img = path.get('relname')
         offer.save()
 
         self.send_success_response(data={'id': offer.get_id()})

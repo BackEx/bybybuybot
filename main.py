@@ -1,5 +1,3 @@
-from tornkts.base.server_response import ServerError, ServerResponseStatus
-
 from handlers.admin_handler import AdminHandler
 from handlers.offers_handler import OffersHandler
 from handlers.texts_handler import TextsHandler

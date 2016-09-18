@@ -61,10 +61,12 @@ class Offer(BaseDocument):
     title = StringField(required=True)
     price = IntField(required=True)
     description = StringField()
-    photo_url = StringField()
     location = StringField()
     offer_type = StringField(choices=OFFER_TYPES)
     tags = ListField(StringField())
+
+    photo_url = StringField()
+    rendered_img = StringField(default=None)
 
     creation_date = DateTimeField()
     update_date = DateTimeField()
