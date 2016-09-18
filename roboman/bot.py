@@ -32,7 +32,6 @@ class BaseBot(BaseHandler):
 
     @classmethod
     def _on_hook(cls, data):
-        print data
         message = data.get('message')
         if not isinstance(message, dict):
             message = data.get('callback_query', {}).get('message')
