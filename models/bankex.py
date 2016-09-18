@@ -77,6 +77,14 @@ class Offer(BaseDocument):
         return options.upload_path + self.rendered_img
 
     @property
+    def rendered_img_pub(self):
+        return '{0}://{1}/uploads/{2}'.format(
+            options.server_schema,
+            options.server_name,
+            self.rendered_img
+        )
+
+    @property
     def type_title(self):
         if self.offer_type == self.TYPE_ONLINE_VIDEO:
             return 'Online video'
@@ -99,7 +107,7 @@ class Offer(BaseDocument):
             'title': self.title,
             'price': self.price,
             'description': self.description,
-            'photo_url': self.photo_url,
+            'photo_url': self.rendered_img_pub,
             'location': self.location,
             'offer_type': self.offer_type,
             'tags': ", ".join(self.tags),
