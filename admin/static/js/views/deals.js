@@ -81,7 +81,7 @@ define([
             if (confirm('Вы уверены?')) {
                 $.ajax({
                     method: 'post',
-                    url: config.getMethodUrl('offers.delete', {id: id}),
+                    url: config.getMethodUrl('salesman.delete', {id: id}),
                     success: function () {
                         self._showSuccess('Успех', 'Предложение удалено');
                         $('.js-salesman-row[data-id="' + id + '"]').remove();
