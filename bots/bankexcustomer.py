@@ -60,12 +60,27 @@ class BankExCustomer(BaseBot):
             return cls._on_enter_price(**data)
 
         if data.get('callback_query'):
+            user.step = User.STEP_BLOCKCHAIN
+            user.save()
+
+            keyboard = ReplyKeyboard(keyboard=[[
+                Text.format('CL_YES_APPROVE'),
+                Text.format('CL_NO_FEAR'),
+                Text.format('CL_WHAT_IS_BLOCKCHAIN'),
+            ]])
+
             cls.send(
                 chat_id=data.get('chat_id'),
-                text=u"Лот %s куплен!" % (data.get('callback_query'),)
+                text=Text.format('CL_MSG_CHOOSE_OFFER'),
+                reply_markup=keyboard.to_json()
             )
             cls.answer_callback_query(callback_query_id=data.get('callback_query_id'))
             return
+
+        if user.step == User.STEP_BLOCKCHAIN:
+            return cls._on_choose_blockchain(**data)
+        elif user.step == User.STEP_QIWI:
+            return cls._on_choose_qiwi(**data)
 
         if cls.match_command(Text.format('CL_MSG_ALL_UNDERSTAND'), text) \
                 or cls.match_command(Text.format('CL_MSG_NEXT'), text):
@@ -85,6 +100,7 @@ class BankExCustomer(BaseBot):
         user.tags = []
         user.price = None
         user.offset = 0
+        user.step = User.STEP_CHOOSING
         user.save()
 
         cls.send(
@@ -146,14 +162,74 @@ class BankExCustomer(BaseBot):
         )
 
     @classmethod
+    def _on_choose_blockchain(cls, **data):
+        user = data.get('user')
+        text = data.get('text')
+
+        if cls.match_command(Text.format('CL_YES_APPROVE'), text):
+            user.step = User.STEP_QIWI
+            user.save()
+            cls.send(
+                chat_id=data.get('chat_id'),
+                text=Text.format('CL_REG_QIWI'),
+                reply_markup=ReplyKeyboard(keyboard=[[
+                    Text.format('CL_YES_APPROVE'),
+                    Text.format('CL_WANT_SPENT_MONEY'),
+                    Text.format('CL_WHAT_IS_QIWI'),
+                ]])
+            )
+        elif cls.match_command(Text.format('CL_NO_FEAR'), text):
+            user.step = User.STEP_CHOOSING
+            user.save()
+            cls.send(
+                chat_id=data.get('chat_id'),
+                text=Text.format('CL_FEAR_BLOCKCHAIN_WIKI'),
+                reply_markup=cls._get_main_keyboard().to_json()
+            )
+        elif cls.match_command(Text.format('CL_WHAT_IS_BLOCKCHAIN'), text):
+            user.step = User.STEP_CHOOSING
+            user.save()
+            cls.send(
+                chat_id=data.get('chat_id'),
+                text=Text.format('CL_WHAT_IS_BLOCKCHAIN_WIKI'),
+                reply_markup=cls._get_main_keyboard().to_json()
+            )
+
+    @classmethod
+    def _on_choose_qiwi(cls, **data):
+        user = data.get('user')
+        text = data.get('text')
+
+        if cls.match_command(Text.format('CL_YES_APPROVE'), text):
+            user.step = User.STEP_CHOOSING
+            user.save()
+            cls.send(
+                chat_id=data.get('chat_id'),
+                text=Text.format('CL_BEGIN_DEAL'),
+                reply_markup=cls._get_main_keyboard().to_json()
+            )
+        elif cls.match_command(Text.format('CL_WANT_SPENT_MONEY'), text):
+            user.step = User.STEP_CHOOSING
+            user.save()
+            cls.send(
+                chat_id=data.get('chat_id'),
+                text=Text.format('CL_CANNOT_SPEND_MONEY'),
+                reply_markup=cls._get_main_keyboard().to_json()
+            )
+        elif cls.match_command(Text.format('CL_WHAT_IS_QIWI'), text):
+            user.step = User.STEP_CHOOSING
+            user.save()
+            cls.send(
+                chat_id=data.get('chat_id'),
+                text=Text.format('CL_QIWI_DESCRIPTION'),
+                reply_markup=cls._get_main_keyboard().to_json()
+            )
+
+    @classmethod
     def _show_item(cls, **kwargs):
         user = kwargs['user']
 
-        keyboard = ReplyKeyboard(keyboard=[[
-            Text.format('CL_MSG_PREVIOUS'),
-            Text.format('CL_MSG_NEW_SEARCH'),
-            Text.format('CL_MSG_NEXT'),
-        ]], one_time_keyboard=False)
+        keyboard = cls._get_main_keyboard()
 
         offers = Offer.objects.skip(user.offset).limit(1)
         if len(offers) == 0:
@@ -208,3 +284,11 @@ class BankExCustomer(BaseBot):
 
         user.offset += 1
         user.save()
+
+    @classmethod
+    def _get_main_keyboard(cls):
+        return ReplyKeyboard(keyboard=[[
+            Text.format('CL_MSG_PREVIOUS'),
+            Text.format('CL_MSG_NEW_SEARCH'),
+            Text.format('CL_MSG_NEXT'),
+        ]], one_time_keyboard=False)

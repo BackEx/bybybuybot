@@ -118,6 +118,10 @@ class Offer(BaseDocument):
 
 
 class User(BaseUser):
+    STEP_CHOOSING = 0
+    STEP_BLOCKCHAIN = 1
+    STEP_QIWI = 2
+
     out_id = IntField(unique=True)
 
     name = StringField()
@@ -129,6 +133,7 @@ class User(BaseUser):
     price = IntField()
 
     offset = IntField(default=0)
+    step = IntField(default=STEP_CHOOSING)
 
     creation_date = DateTimeField()
     update_date = DateTimeField()
@@ -142,6 +147,7 @@ class User(BaseUser):
     def to_dict_impl(self, **kwargs):
         return {
             'id': self.get_id(),
+            'step': self.step,
             'out_id': self.out_id,
             'name': self.name,
             'surname': self.surname,
