@@ -50,8 +50,7 @@ class BankExCustomer(BaseBot):
         user = data['user']
         text = data.get('text')
 
-
-        if cls.match_command('/start', text):
+        if cls.match_command('/start', text) or cls.match_command(Text.format('CL_MSG_NEW_SEARCH'), text):
             return cls._on_start(**data)
         if not user.location:
             return cls._on_enter_location(**data)
@@ -67,7 +66,6 @@ class BankExCustomer(BaseBot):
             )
             cls.answer_callback_query(callback_query_id=data.get('callback_query_id'))
             return
-
 
         if cls.match_command(Text.format('CL_MSG_ALL_UNDERSTAND'), text) \
                 or cls.match_command(Text.format('CL_MSG_NEXT'), text):
