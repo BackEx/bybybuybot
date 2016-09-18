@@ -32,10 +32,18 @@ class BaseBot(BaseHandler):
 
     @classmethod
     def _on_hook(cls, data):
+        print data
         message = data.get('message')
-        if isinstance(message, dict):
+        if not isinstance(message, dict):
+            message = data.get('callback_query', {}).get('message')
+            if isinstance(message, dict):
+                user = data.get('callback_query', {}).get('from')
+            else:
+                user = {}
+        else:
             user = message.get('from', {})
 
+        if isinstance(message, dict):
             payload = {
                 'text': message.get('text'),
                 'date': message.get('date'),
@@ -49,7 +57,10 @@ class BaseBot(BaseHandler):
                 'from_last_name': user.get('last_name', None),
 
                 'location': message.get('location', None),
-                'photo': message.get('photo', None)
+                'photo': message.get('photo', None),
+
+                'callback_query': data.get('callback_query', {}).get('data', None),
+                'callback_query_id': data.get('callback_query', {}).get('id', None)
             }
 
             try:
@@ -82,7 +93,19 @@ class BaseBot(BaseHandler):
             logger.error(res.text)
 
     @classmethod
-    def sendLocation(cls, **params):
+    def answer_callback_query(cls, **params):
+        res = cls.connection.post(cls.get_method_url('answerCallbackQuery'), params=params)
+        if res.status_code != 200:
+            logger.error(res.text)
+
+    @classmethod
+    def send_photo(cls, files, **params):
+        res = cls.connection.post(cls.get_method_url('sendPhoto'), files=files, params=params)
+        if res.status_code != 200:
+            logger.error(res.text)
+
+    @classmethod
+    def send_location(cls, **params):
         res = cls.connection.post(cls.get_method_url('sendLocation'), params=params)
         if res.status_code != 200:
             logger.error(res.text)

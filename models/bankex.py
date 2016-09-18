@@ -5,6 +5,7 @@ from tornkts.base.mongodb import BaseDocument
 from tornkts.base.mongodb.user import BaseAdmin
 from datetime import datetime
 from pytz import timezone
+from settings import options
 
 
 class Admin(BaseAdmin):
@@ -72,6 +73,10 @@ class Offer(BaseDocument):
     update_date = DateTimeField()
 
     @property
+    def rendered_img_abs(self):
+        return options.upload_path + self.rendered_img
+
+    @property
     def type_title(self):
         if self.offer_type == self.TYPE_ONLINE_VIDEO:
             return 'Online video'
@@ -110,6 +115,12 @@ class User(BaseUser):
     name = StringField()
     surname = StringField()
     username = StringField()
+
+    location = StringField()
+    tags = ListField(StringField())
+    price = IntField()
+
+    offset = IntField(default=0)
 
     creation_date = DateTimeField()
     update_date = DateTimeField()

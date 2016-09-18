@@ -56,10 +56,10 @@ class OffersHandler(AuthMixin, TemplateMixin, BankExObjectHandler):
         try:
             salesman = Salesman.objects.get(telegram_id=telegram_id)
         except Salesman.DoesNotExist:
-            telegram_nick = self.get_str_argument('telegram_nick')
-            about = self.get_str_argument('about', default=None)
-            
-            salesman = Salesman(telegram_id=telegram_id, telegram_nick=telegram_nick, about=about)
+            salesman = Salesman()
+            salesman.telegram_id = telegram_id
+            salesman.telegram_nick = self.get_str_argument('telegram_nick')
+            salesman.about = self.get_str_argument('about', default=None)
             salesman.save()
 
         offer = Offer()

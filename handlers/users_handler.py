@@ -9,10 +9,6 @@ from tornkts.mixins.auth_mixin import AuthMixin
 class UsersHandler(AuthMixin, BankExObjectHandler):
     MODEL_CLS = User
 
-    location = StringField()
-    tags = ListField(StringField())
-    price = IntField()
-
     @property
     def queryset(self):
         return User.objects.all().order_by('-creation_date')
