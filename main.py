@@ -1,3 +1,5 @@
+from raven.contrib.tornado import AsyncSentryClient
+
 from handlers.admin_handler import AdminHandler
 from handlers.offers_handler import OffersHandler
 from handlers.texts_handler import TextsHandler
@@ -43,7 +45,9 @@ if __name__ == "__main__":
         }
     }
 
-
     mongo_connection.connect(host=options.mongo_uri)
     server = RobomanServer(bots=bots, mode=options.mode, handlers=handlers, settings=settings)
+    server.sentry_client = AsyncSentryClient(
+        'https://f1dc8b4909ce4d41b1bb2da4d92cb4dc:1ceefc0a0a91419da95f2abbf99f7f51@sentry.team.ktsstudio.ru/6'
+    )
     server.start()

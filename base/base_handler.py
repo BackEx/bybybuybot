@@ -1,6 +1,8 @@
 from os.path import dirname
 
 from datetime import datetime
+
+from raven.contrib.tornado import SentryMixin
 from tornkts import utils
 from tornkts.handlers import BaseHandler
 from tornkts.handlers.object_handler import ObjectHandler
@@ -9,8 +11,12 @@ from tornado.escape import xhtml_escape
 from settings import options
 
 
-class BankExBaseHandler(BaseHandler):
+class BankExBaseHandler(SentryMixin, BaseHandler):
     _payload = None
+
+    def _capture(self, call_name, data=None, **kwargs):
+        if options.debug == False:
+            return super(BankExBaseHandler, self)._capture(call_name, data, **kwargs)
 
     def get_argument(self, name, default=BaseHandler._ARG_DEFAULT, strip=True, **kwargs):
         if self.request.method == 'POST':
@@ -27,8 +33,12 @@ class BankExBaseHandler(BaseHandler):
             return super(BankExBaseHandler, self).get_argument(name, default, strip)
 
 
-class BankExObjectHandler(ObjectHandler):
+class BankExObjectHandler(SentryMixin, ObjectHandler):
     _payload = None
+
+    def _capture(self, call_name, data=None, **kwargs):
+        if options.debug == False:
+            return super(BankExObjectHandler, self)._capture(call_name, data, **kwargs)
 
     def get_argument(self, name, default=BaseHandler._ARG_DEFAULT, strip=True, **kwargs):
         if self.request.method == 'POST':
