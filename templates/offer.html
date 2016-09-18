@@ -23,22 +23,22 @@
         </style>
 
         <script type="text/javascript">
-
             function changeImage() {
                 var offerTypeDiv = document.getElementById('offer_type');
                 var offerType = offerTypeDiv.innerHTML;
+                //alert('function');
                 var imgSrc = "";
                 switch (offerType) {
-                    case "Online Video":
+                    case "Online video":
                         imgSrc = "https://s3.eu-central-1.amazonaws.com/testing-killjoy/bankExBot/video.png";
                         break;
                     case "Offline":
                         imgSrc = "https://s3.eu-central-1.amazonaws.com/testing-killjoy/bankExBot/offline.png";
                         break;
-                    case "Online Chat":
+                    case "Online chat":
                         imgSrc = "https://s3.eu-central-1.amazonaws.com/testing-killjoy/bankExBot/chat.png";
                         break;
-                    case "Online Audio":
+                    case "Online audio":
                         imgSrc = "https://s3.eu-central-1.amazonaws.com/testing-killjoy/bankExBot/audio.png";
                         break;
                     default:
@@ -79,9 +79,9 @@
                         <!-- Rating -->
                         <td>
                             <div align="right" style="white-space:nowrap">
-                                <img src="https://s3.eu-central-1.amazonaws.com/testing-killjoy/bankExBot/thumbUp.png" style="display:inline;padding-right:5px"/>
+                                {#<img src="https://s3.eu-central-1.amazonaws.com/testing-killjoy/bankExBot/thumbUp.png" style="display:inline;padding-right:5px"/>
                                 <div style="display:inline;color:#47B549;margin-right:10px;" id="offerRating">98,5%
-                                </div>
+                                </div>#}
                             </div>
                         </td>
                     </tr>
@@ -90,7 +90,7 @@
                         <td>
                             <img src="https://s3.eu-central-1.amazonaws.com/testing-killjoy/bankExBot/video.png" id="offerTypeImage" style="vertical-align: middle;"/>
                         </td>
-                        <td id="offer_type">Offline</td>
+                        <td id="offer_type">{{ offer.type_title }}</td>
                     </tr>
 
                 </table>

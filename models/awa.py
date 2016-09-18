@@ -69,6 +69,17 @@ class Offer(BaseDocument):
     creation_date = DateTimeField()
     update_date = DateTimeField()
 
+    @property
+    def type_title(self):
+        if self.offer_type == self.TYPE_ONLINE_VIDEO:
+            return 'Online video'
+        elif self.offer_type == self.TYPE_ONLINE_AUDIO:
+            return 'Online audio'
+        elif self.offer_type == self.TYPE_ONLINE_CHAT:
+            return 'Online chat'
+        else:
+            return 'Offline'
+
     def save(self, *args, **kwargs):
         if not self.creation_date:
             self.creation_date = datetime.now(tz=timezone('UTC'))
