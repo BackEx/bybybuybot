@@ -6,5 +6,4 @@ pymongo==3.2
 pytz==2016.3
 torndsession==1.1.4
 emoji==0.3.9
-geopy==1.11.0
 raven==5.27.0
