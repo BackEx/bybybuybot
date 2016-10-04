@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "name": "bankex",
+  "name": "bybybankbot",
   "description": "BankEx API and customer bot",
   "yumDependencies": [
     "python27"
